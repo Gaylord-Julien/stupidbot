@@ -1,6 +1,6 @@
 import { Command } from './command';
-import { Hello } from './commands/hello';
 import { Laravel } from './commands/laravel';
 import { Nextjs } from './commands/nextjs';
+import { Source } from './commands/source';
 
-export const Commands: Command[] = [Hello, Nextjs, Laravel];
+export const Commands: Command[] = [Source, Nextjs, Laravel];
