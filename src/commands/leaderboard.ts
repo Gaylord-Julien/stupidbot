@@ -12,11 +12,16 @@ export const Leaderboard: Command = {
     }
     const db = new sqlite3.Database('./data/keyword_counts.db');
 
-    db.all('SELECT * FROM counts ORDER BY count DESC', (err, rows: KeywordCount[]) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
+    try {
+      const rows: KeywordCount[] = await new Promise((resolve, reject) => {
+        db.all('SELECT * FROM counts ORDER BY count DESC', (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows as KeywordCount[]);
+          }
+        });
+      });
 
       // find the users with the most counts for each keyword
       const counts = rows.reduce((acc, row) => {
@@ -43,28 +48,34 @@ export const Leaderboard: Command = {
       // create the embed and add "winner" and "runner-up" emojis to the top 2 users
       const embed = {
         title: 'Les grands gagnants',
-        fields: Object.keys(topUsers).map((keyword) => {
-          const topUsersForKeyword = topUsers[keyword];
-          return {
-            name: keyword,
-            value: topUsersForKeyword
-              .map((user, index) => {
-                let medal;
-                if (index === 0) {
-                  medal = '🥇';
-                } else if (index === 1) {
-                  medal = '🥈';
-                } else {
-                  medal = '';
-                }
-                return `${medal} ${user.username} - ${user.count}`;
-              })
-              .join('\n'),
-          };
-        }),
+        fields: await Promise.all(
+          Object.keys(topUsers).map(async (keyword) => {
+            const topUsersForKeyword = topUsers[keyword];
+            return {
+              name: keyword,
+              value: topUsersForKeyword
+                .map((user, index) => {
+                  let medal;
+                  if (index === 0) {
+                    medal = '🥇';
+                  } else if (index === 1) {
+                    medal = '🥈';
+                  } else {
+                    medal = '';
+                  }
+                  return `${medal} ${user.username} - ${user.count}`;
+                })
+                .join('\n'),
+            };
+          })
+        ),
       };
 
       interaction.reply({ embeds: [embed] });
-    });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      db.close();
+    }
   },
 };
