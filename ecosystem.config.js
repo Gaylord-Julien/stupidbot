@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'stupidbot',
       script: 'npm',
-      args: 'start',
-    },
-  ],
-};
+      args: 'start'
+    }
+  ]
+}
