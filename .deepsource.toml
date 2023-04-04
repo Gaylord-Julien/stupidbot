@@ -3,8 +3,5 @@ version = 1
 [[analyzers]]
 name = "javascript"
 
-[[transformers]]
-name = "standardjs"
-
 environment = ["nodejs"]
 
