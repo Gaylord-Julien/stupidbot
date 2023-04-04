@@ -49,7 +49,7 @@ export const Leaderboard: Command = {
       const embed = {
         title: 'Les grands gagnants',
         fields: await Promise.all(
-          Object.keys(topUsers).map(async (keyword) => {
+          Object.keys(topUsers).map((keyword) => {
             const topUsersForKeyword = topUsers[keyword];
             return {
               name: keyword,
