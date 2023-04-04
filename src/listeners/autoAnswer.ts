@@ -1,23 +1,30 @@
-// this is a listener file, it should listen to all new messages and check if it should auto answer
-// if it should, it should answer it without discord-akairo
+// This file listens for new messages and auto-responds to certain keywords
 
 // src/listeners/autoAnswer.ts
 
 import { Client } from 'discord.js';
-export default (client: Client): void => {
+
+const includes = (msg: string, keywords: string[]): boolean => {
+  return keywords.some((keyword) => msg.includes(keyword));
+};
+
+export default function autoAnswer(client: Client): void {
   client.on('messageCreate', (msg) => {
+    const lowerCaseMsg = msg.content.toLowerCase();
+
     if (msg.author.bot) return;
-    if (
-      msg.content.toLowerCase().includes('wordpress') ||
-      msg.content.toLowerCase().includes('wp')
-    ) {
-      msg.reply("Beurk, WordPress c'est caca!");
-      // add a reaction to the message (:poop:)
+
+    const wordpressKeywords = ['wordpress', 'wp'];
+
+    if (includes(lowerCaseMsg, wordpressKeywords)) {
+      msg.reply("Beurk, WordPress c'est caca !");
       msg.react('💩');
     }
-    if (msg.content.toLowerCase().includes('emma') || msg.content.toLowerCase().includes('react')) {
-      // add a reaction to the message (heart)
+
+    const variousWords = ['emma', 'react'];
+
+    if (includes(lowerCaseMsg, variousWords)) {
       msg.react('❤️');
     }
   });
-};
+}
