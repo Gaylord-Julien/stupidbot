@@ -5,7 +5,12 @@
 import { Client } from 'discord.js';
 
 const includes = (msg: string, keywords: string[]): boolean => {
-  return keywords.some((keyword) => msg.includes(keyword));
+  for (const keyword of keywords) {
+    if (msg.includes(keyword) && !msg.includes(`!${keyword}`)) {
+      return true;
+    }
+  }
+  return false;
 };
 
 export default function autoAnswer(client: Client): void {
