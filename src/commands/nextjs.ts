@@ -3,20 +3,18 @@
 
 // src/commands/nextjs.ts
 
-import { Command } from "../command";
-import { Client, BaseInteraction } from "discord.js";
+import { BaseInteraction, Client } from 'discord.js';
+import { Command } from '../command';
 
 export const Nextjs: Command = {
-  name: "nextjs",
-  description: "Get the latest release of Next.js",
+  name: 'nextjs',
+  description: 'Get the latest release of Next.js',
   run: async (client: Client, interaction: BaseInteraction) => {
     if (!interaction.isCommand()) {
       return;
     }
 
-    const res = await fetch(
-      "https://api.github.com/repos/vercel/next.js/releases/latest"
-    );
+    const res = await fetch('https://api.github.com/repos/vercel/next.js/releases/latest');
     const json = (await res.json()) as {
       body: string;
       tag_name: string;
@@ -24,7 +22,7 @@ export const Nextjs: Command = {
     };
 
     // remove the first line of the changelog and display only the first 2048 characters
-    const changelog = json.body.split("\n").slice(1).join("\n").slice(0, 2048);
+    const changelog = json.body.split('\n').slice(1).join('\n').slice(0, 2048);
 
     // display the changelog in an embed
     await interaction.reply({
