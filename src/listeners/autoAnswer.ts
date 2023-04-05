@@ -61,8 +61,6 @@ export default function autoAnswer(client: Client): void {
           );
         }
       );
-
-      msg.reply("Beurk, WordPress c'est caca !");
       msg.react('💩');
     }
 
